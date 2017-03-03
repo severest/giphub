@@ -1,0 +1,35 @@
+.header {
+    height: 50px;
+    background: #5d016e;
+}
+
+.icon {
+    height: 100%;
+}
+
+.header button {
+    border-radius: 4px;
+    font-family: "Open Sans", sans-serif;
+    color: #ffffff;
+    font-size: 11px;
+    background: #5d016e;
+    padding: 5px;
+    text-decoration: none;
+    border: 0;
+    float: right;
+    top: 12px;
+    right: 20px;
+    position: relative;
+}
+
+.header button:hover {
+    text-decoration: underline;
+}
+.header button:focus {
+    outline: none;
+}
+
+.powered {
+    height: 55%;
+    margin: 10px;
+}
