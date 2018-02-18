@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { toggleFrame } from '../actions/gifs';
@@ -15,7 +16,7 @@ import giphub from '../images/giphub.png';
 )
 class Header extends React.Component {
     static propTypes = {
-        closeDock: React.PropTypes.func.isRequired,
+        closeDock: PropTypes.func.isRequired,
     }
 
     render() {

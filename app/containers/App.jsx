@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Dock from 'react-dock';
 
-import Header from '../components/header.js';
-import Search from '../components/search.js';
-import Loader from '../components/loader.js';
+import Header from '../components/header';
+import Search from '../components/search';
+import Loader from '../components/loader';
 
 import { toggleFrame, loadMore } from '../actions/gifs';
 
@@ -26,18 +27,18 @@ import style from './App.css';
 )
 export default class App extends Component {
     static propTypes = {
-        isVisible: React.PropTypes.bool.isRequired,
-        gifs: React.PropTypes.array.isRequired,
-        searchInProgress: React.PropTypes.bool.isRequired,
-        searchError: React.PropTypes.bool.isRequired,
-        textarea: React.PropTypes.object,
-        closeDock: React.PropTypes.func.isRequired,
-        loadMore: React.PropTypes.func.isRequired,
-        onChooseGif: React.PropTypes.func.isRequired,
+        isVisible: PropTypes.bool.isRequired,
+        gifs: PropTypes.array.isRequired,
+        searchInProgress: PropTypes.bool.isRequired,
+        searchError: PropTypes.bool.isRequired,
+        textarea: PropTypes.object,
+        closeDock: PropTypes.func.isRequired,
+        loadMore: PropTypes.func.isRequired,
+        onChooseGif: PropTypes.func.isRequired,
     }
 
     getGifs() {
-        return this.props.gifs.map((g) => (
+        return this.props.gifs.map(g => (
             <button
                 key={g.id}
                 onClick={() => this.insertTextAtCursor(g.images.downsized_medium.url)}
@@ -80,10 +81,11 @@ export default class App extends Component {
         const text = `![giphub](${gifURL})`;
         const endIndex = this.props.textarea.selectionEnd;
         this.props.textarea.value = this.props.textarea.value.slice(
-                                        0,
-                                        this.props.textarea.selectionStart
-                                    ) + text + this.props.textarea.value.slice(endIndex);
-        this.props.textarea.selectionStart = this.props.textarea.selectionEnd = endIndex + text.length;
+            0,
+            this.props.textarea.selectionStart
+        ) + text + this.props.textarea.value.slice(endIndex);
+        this.props.textarea.selectionStart = endIndex + text.length;
+        this.props.textarea.selectionEnd = this.props.textarea.selectionStart;
         this.props.closeDock();
         this.props.onChooseGif();
     }

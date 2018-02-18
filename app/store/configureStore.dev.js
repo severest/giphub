@@ -1,11 +1,11 @@
 import { applyMiddleware, createStore, compose } from 'redux';
-import rootReducer from '../reducers';
 import thunk from 'redux-thunk';
+import rootReducer from '../reducers';
 
 export default () => {
     const enhancer = compose(
-      applyMiddleware(thunk),
-      window.devToolsExtension ? window.devToolsExtension() : nope => nope,
+        applyMiddleware(thunk),
+        window.devToolsExtension ? window.devToolsExtension() : nope => nope,
     );
     const store = createStore(rootReducer, enhancer);
     if (module.hot) {

@@ -16,6 +16,10 @@ const baseDevConfig = () => ({
         stats: {
             colors: true
         },
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true'
+        },
         noInfo: true
     },
     hotMiddleware: {
@@ -28,7 +32,7 @@ const baseDevConfig = () => ({
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.IgnorePlugin(/[^/]+\/[\S]+.prod$/),
         new webpack.DefinePlugin({
             __HOST__: `'${host}'`,
@@ -39,12 +43,12 @@ const baseDevConfig = () => ({
         })
     ],
     resolve: {
-        extensions: ['', '.js']
+        extensions: ['.js', '.jsx']
     },
     module: {
         loaders: [{
-            test: /\.js$/,
-            loader: 'babel',
+            test: /\.jsx?$/,
+            loader: 'babel-loader',
             exclude: /node_modules/,
             query: {
                 presets: ['react-hmre']
@@ -52,13 +56,20 @@ const baseDevConfig = () => ({
         }, {
             test: /\.css$/,
             loaders: [
-                'style',
-                'css?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-                'postcss'
+                'style-loader',
+                {
+                    loader: 'css-loader',
+                    options: {
+                        modules: true,
+                        sourceMap: true,
+                        localIdentName: '[path][name]__[local]--[hash:base64:5]'
+                    }
+                }
+                // 'postcss-loader'
             ]
         }, {
             test: /\.png$/,
-            loader: 'url'
+            loader: 'url-loader'
         }]
     }
 });

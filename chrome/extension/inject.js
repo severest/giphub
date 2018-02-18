@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { render } from 'react-dom';
 
 import Root from '../../app/containers/Root';
@@ -7,7 +8,7 @@ import actionTypes from '../../app/actions/gif-action-types';
 
 class GifButton extends Component {
     static propTypes = {
-        handleGifClick: React.PropTypes.func.isRequired,
+        handleGifClick: PropTypes.func.isRequired,
     }
 
     render() {

@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+
 const customPath = path.join(__dirname, './customPublicPath');
 
 module.exports = {
@@ -13,9 +14,7 @@ module.exports = {
         chunkFilename: '[id].chunk.js'
     },
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.IgnorePlugin(/[^/]+\/[\S]+.dev$/),
-        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
             comments: false,
             compressor: {
@@ -29,23 +28,30 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['', '.js']
+        extensions: ['.js', '.jsx']
     },
     module: {
         loaders: [{
-            test: /\.js$/,
-            loader: 'babel',
+            test: /\.jsx?$/,
+            loader: 'babel-loader',
             exclude: /node_modules/
         }, {
             test: /\.css$/,
             loaders: [
-                'style',
-                'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-                'postcss'
+                'style-loader',
+                {
+                    loader: 'css-loader',
+                    options: {
+                        modules: true,
+                        sourceMap: true,
+                        localIdentName: '[path][name]__[local]--[hash:base64:5]'
+                    }
+                }
+                // 'postcss-loader'
             ]
         }, {
             test: /\.png$/,
-            loader: 'url'
+            loader: 'url-loader'
         }]
     }
 };

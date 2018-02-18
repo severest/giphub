@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { searchGifs } from '../actions/gifs';
@@ -15,8 +16,8 @@ import style from './search.css';
 )
 class Search extends React.Component {
     static propTypes = {
-        isVisible: React.PropTypes.bool.isRequired,
-        searchGifs: React.PropTypes.func.isRequired,
+        isVisible: PropTypes.bool.isRequired,
+        searchGifs: PropTypes.func.isRequired,
     }
 
     state = {
@@ -55,7 +56,7 @@ class Search extends React.Component {
                     placeholder="Search..."
                     onChange={this.handleSearchInputChange}
                     onKeyPress={this.handleKeyPress}
-                    ref={input => { this.inputField = input; }}
+                    ref={(input) => { this.inputField = input; }}
                 />
             </div>
         );

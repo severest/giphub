@@ -2,10 +2,10 @@
 const config = require('./prod.config');
 
 module.exports = {
-  output: {
-    libraryTarget: 'commonjs2'
-  },
-  module: {
-    loaders: config.module.loaders.slice(1)  // remove babel-loader
-  }
+    output: {
+        libraryTarget: 'commonjs2'
+    },
+    module: {
+        loaders: config.module.loaders.slice(1) // remove babel-loader
+    }
 };

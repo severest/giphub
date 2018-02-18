@@ -1,6 +1,6 @@
 import actionTypes from './gif-action-types';
 
-export const searchGifs = (searchTerm) => (dispatch, getState) => {
+export const searchGifs = searchTerm => (dispatch, getState) => {
     dispatch({ type: actionTypes.SEARCH_GIF, payload: searchTerm });
     const limit = getState().gifs.searchLimit;
     return fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURI(searchTerm)}&limit=${limit}&api_key=dc6zaTOxFJmzC`)
@@ -27,10 +27,8 @@ export const searchGifs = (searchTerm) => (dispatch, getState) => {
 };
 
 export const loadMore = () => (dispatch, getState) => {
-    const searchTerm = getState().gifs.lastSearchTerm;
-    const hasMorePages = getState().gifs.morePages;
-    const moreRequestInProgress = getState().gifs.moreRequestInProgress;
-    if (hasMorePages && !moreRequestInProgress) {
+    const { searchTerm, morePages, moreRequestInProgress } = getState().gifs;
+    if (morePages && !moreRequestInProgress) {
         dispatch({ type: actionTypes.FETCH_MORE_GIF });
         const offset = getState().gifs.searchOffset;
         const limit = getState().gifs.searchLimit;

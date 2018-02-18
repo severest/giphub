@@ -15,7 +15,7 @@ const initialState = {
 };
 
 const actionsMap = {
-    [actionTypes.TOGGLE_FRAME]: (state) => ({
+    [actionTypes.TOGGLE_FRAME]: state => ({
         ...state,
         frameVisible: !state.frameVisible,
     }),
@@ -26,7 +26,7 @@ const actionsMap = {
         lastSearchTerm: action.payload,
         searchOffset: 0,
     }),
-    [actionTypes.SEARCH_ERROR]: (state) => ({
+    [actionTypes.SEARCH_ERROR]: state => ({
         ...state,
         searchInProgress: false,
         searchError: true,
@@ -37,7 +37,7 @@ const actionsMap = {
         gifs: action.payload,
         searchOffset: state.searchLimit,
     }),
-    [actionTypes.FETCH_MORE_GIF]: (state) => ({
+    [actionTypes.FETCH_MORE_GIF]: state => ({
         ...state,
         searchOffset: state.searchOffset + state.searchLimit,
         moreRequestInProgress: true,
