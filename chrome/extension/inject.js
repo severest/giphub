@@ -8,6 +8,7 @@ import actionTypes from '../../app/actions/gif-action-types';
 
 class GifButton extends Component {
     static propTypes = {
+        className: PropTypes.string.isRequired,
         handleGifClick: PropTypes.func.isRequired,
     }
 
@@ -15,8 +16,9 @@ class GifButton extends Component {
         return (
             <button
                 type="button"
-                className="toolbar-item"
+                className={this.props.className}
                 onClick={this.props.handleGifClick}
+                style={{marginRight: '5px'}}
             >
                 GIF
             </button>
@@ -24,7 +26,8 @@ class GifButton extends Component {
     }
 }
 
-const toolbars = document.getElementsByClassName('js-toolbar');
+
+const toolbars = document.querySelectorAll('.timeline-comment-wrapper .form-actions');
 const reviewMenu = document.querySelector('.pull-request-review-menu');
 let store;
 
@@ -39,16 +42,17 @@ if (toolbars.length > 0 || reviewMenu !== null) {
     );
 }
 
-for (let i = 0; i < toolbars.length; i++) {
+for (let i = 0; i < toolbars.length; i += 1) {
     const previousBtns = toolbars[i].getElementsByClassName('gif-toolbar');
-    for (let btn = 0; btn < previousBtns.length; btn++) {
+    for (let btn = 0; btn < previousBtns.length; btn += 1) {
         previousBtns[btn].remove();
     }
 
-    const injectDOM = document.createElement('div');
-    injectDOM.className = 'toolbar-group gif-toolbar';
+    const injectDOM = document.createElement('span');
+    injectDOM.className = 'gif-toolbar';
     toolbars[i].appendChild(injectDOM);
     render(<GifButton
+        className="btn"
         handleGifClick={() => {
             const bar = toolbars[i];
             const area = bar.parentNode.parentNode.getElementsByClassName('comment-form-textarea')[0];
@@ -67,7 +71,7 @@ for (let i = 0; i < toolbars.length; i++) {
 
 if (reviewMenu !== null) {
     const previousBtns = reviewMenu.getElementsByClassName('gif-toolbar');
-    for (let btn = 0; btn < previousBtns.length; btn++) {
+    for (let btn = 0; btn < previousBtns.length; btn += 1) {
         previousBtns[btn].remove();
     }
 
@@ -75,6 +79,7 @@ if (reviewMenu !== null) {
     injectDOM.className = 'gif-toolbar';
     reviewMenu.getElementsByClassName('form-actions')[0].prepend(injectDOM);
     render(<GifButton
+        className="toolbar-item"
         handleGifClick={() => {
             const area = reviewMenu.getElementsByClassName('comment-form-textarea')[0];
             store.dispatch({
