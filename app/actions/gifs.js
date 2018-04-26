@@ -27,13 +27,13 @@ export const searchGifs = searchTerm => (dispatch, getState) => {
 };
 
 export const loadMore = () => (dispatch, getState) => {
-    const { searchTerm, morePages, moreRequestInProgress } = getState().gifs;
+    const { lastSearchTerm, morePages, moreRequestInProgress } = getState().gifs;
     if (morePages && !moreRequestInProgress) {
         dispatch({ type: actionTypes.FETCH_MORE_GIF });
         const offset = getState().gifs.searchOffset;
         const limit = getState().gifs.searchLimit;
         const currentGifs = getState().gifs.gifs;
-        return fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURI(searchTerm)}&offset=${offset}&limit=${limit}&api_key=dc6zaTOxFJmzC`)
+        return fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURI(lastSearchTerm)}&offset=${offset}&limit=${limit}&api_key=dc6zaTOxFJmzC`)
             .then((res) => {
                 if (res.status !== 200) {
                     dispatch({ type: actionTypes.SEARCH_ERROR });

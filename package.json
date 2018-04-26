@@ -1,6 +1,6 @@
 {
   "name": "Giphub",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Quickly add gifs to your github comments",
   "scripts": {
     "dev": "node scripts/dev",
