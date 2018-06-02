@@ -1,4 +1,4 @@
-# Giphub
+# Giphub [![build status](https://travis-ci.org/severest/giphub.svg?branch=master)](https://travis-ci.org/severest/giphub)
 Giphub let's you insert Giphy GIFs from within GitHub.
 
 ## Development
