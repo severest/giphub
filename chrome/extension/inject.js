@@ -18,7 +18,7 @@ class GifButton extends Component {
                 type="button"
                 className={this.props.className}
                 onClick={this.props.handleGifClick}
-                style={{marginRight: '5px'}}
+                style={{ marginRight: '5px' }}
             >
                 GIF
             </button>
@@ -26,73 +26,82 @@ class GifButton extends Component {
     }
 }
 
+const loadGifButtons = () => {
+    const toolbars = document.querySelectorAll('.timeline-comment-wrapper .form-actions, .js-inline-comment-form .form-actions');
+    const reviewMenu = document.querySelector('.pull-request-review-menu');
+    let store;
 
-const toolbars = document.querySelectorAll('.timeline-comment-wrapper .form-actions');
-const reviewMenu = document.querySelector('.pull-request-review-menu');
-let store;
-
-if (toolbars.length > 0 || reviewMenu !== null) {
-    const createStore = require('../../app/store/configureStore');
-    store = createStore();
-    const frameDOM = document.createElement('div');
-    document.body.appendChild(frameDOM);
-    render(
-        <Root store={store} />,
-        frameDOM
-    );
-}
-
-for (let i = 0; i < toolbars.length; i += 1) {
-    const previousBtns = toolbars[i].getElementsByClassName('gif-toolbar');
-    for (let btn = 0; btn < previousBtns.length; btn += 1) {
-        previousBtns[btn].remove();
+    if (toolbars.length > 0 || reviewMenu !== null) {
+        const createStore = require('../../app/store/configureStore');
+        store = createStore();
+        const frameDOM = document.createElement('div');
+        document.body.appendChild(frameDOM);
+        render(
+            <Root store={store} />,
+            frameDOM
+        );
     }
 
-    const injectDOM = document.createElement('span');
-    injectDOM.className = 'gif-toolbar';
-    toolbars[i].appendChild(injectDOM);
-    render(<GifButton
-        className="btn"
-        handleGifClick={() => {
-            const bar = toolbars[i];
-            const area = bar.parentNode.parentNode.getElementsByClassName('comment-form-textarea')[0];
-            store.dispatch({
-                type: actionTypes.SET_TEXTAREA,
-                payload: {
-                    area,
-                    onChooseGif: () => {},
-                },
-            });
-            store.dispatch({ type: actionTypes.TOGGLE_FRAME });
-        }}
-    />, injectDOM);
-}
+    for (let i = 0; i < toolbars.length; i += 1) {
+        const previousBtns = toolbars[i].getElementsByClassName('gif-toolbar');
+        for (let btn = 0; btn < previousBtns.length; btn += 1) {
+            previousBtns[btn].remove();
+        }
 
-
-if (reviewMenu !== null) {
-    const previousBtns = reviewMenu.getElementsByClassName('gif-toolbar');
-    for (let btn = 0; btn < previousBtns.length; btn += 1) {
-        previousBtns[btn].remove();
-    }
-
-    const injectDOM = document.createElement('div');
-    injectDOM.className = 'gif-toolbar';
-    reviewMenu.getElementsByClassName('form-actions')[0].prepend(injectDOM);
-    render(<GifButton
-        className="toolbar-item"
-        handleGifClick={() => {
-            const area = reviewMenu.getElementsByClassName('comment-form-textarea')[0];
-            store.dispatch({
-                type: actionTypes.SET_TEXTAREA,
-                payload: {
-                    area,
-                    onChooseGif: () => {
-                        document.querySelector('.js-reviews-container').classList += ' active';
-                        area.focus();
+        const injectDOM = document.createElement('span');
+        injectDOM.className = 'gif-toolbar';
+        toolbars[i].appendChild(injectDOM);
+        render(<GifButton
+            className="btn"
+            handleGifClick={() => {
+                const bar = toolbars[i];
+                const area = bar.parentNode.parentNode.getElementsByClassName('comment-form-textarea')[0];
+                store.dispatch({
+                    type: actionTypes.SET_TEXTAREA,
+                    payload: {
+                        area,
+                        onChooseGif: () => {},
                     },
-                },
-            });
-            store.dispatch({ type: actionTypes.TOGGLE_FRAME });
-        }}
-    />, injectDOM);
-}
+                });
+                store.dispatch({ type: actionTypes.TOGGLE_FRAME });
+            }}
+        />, injectDOM);
+    }
+
+
+    if (reviewMenu !== null) {
+        const previousBtns = reviewMenu.getElementsByClassName('gif-toolbar');
+        for (let btn = 0; btn < previousBtns.length; btn += 1) {
+            previousBtns[btn].remove();
+        }
+
+        const injectDOM = document.createElement('div');
+        injectDOM.className = 'gif-toolbar';
+        reviewMenu.getElementsByClassName('form-actions')[0].prepend(injectDOM);
+        render(<GifButton
+            className="toolbar-item"
+            handleGifClick={() => {
+                const area = reviewMenu.getElementsByClassName('comment-form-textarea')[0];
+                store.dispatch({
+                    type: actionTypes.SET_TEXTAREA,
+                    payload: {
+                        area,
+                        onChooseGif: () => {
+                            document.querySelector('.js-reviews-container').classList += ' active';
+                            area.focus();
+                        },
+                    },
+                });
+                store.dispatch({ type: actionTypes.TOGGLE_FRAME });
+            }}
+        />, injectDOM);
+    }
+};
+
+loadGifButtons();
+
+document.querySelectorAll('.js-add-line-comment').forEach((element) => {
+    element.addEventListener('click', () => {
+        setTimeout(loadGifButtons, 0);
+    });
+});
