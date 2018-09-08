@@ -60,7 +60,12 @@ const loadGifButtons = () => {
                     type: actionTypes.SET_TEXTAREA,
                     payload: {
                         area,
-                        onChooseGif: () => {},
+                        onChooseGif: () => {
+                            const btns = bar.getElementsByClassName('btn');
+                            for (let btn = 0; btn < btns.length; btn += 1) {
+                                btns[btn].removeAttribute('disabled', false);
+                            }
+                        },
                     },
                 });
                 store.dispatch({ type: actionTypes.TOGGLE_FRAME });
