@@ -8,12 +8,6 @@ import style from './header.css';
 import giphy from '../images/giphy.png';
 import giphub from '../images/giphub.png';
 
-@connect(
-    null,
-    dispatch => ({
-        closeDock: () => dispatch(toggleFrame()),
-    })
-)
 class Header extends React.Component {
     static propTypes = {
         closeDock: PropTypes.func.isRequired,
@@ -32,4 +26,9 @@ class Header extends React.Component {
     }
 }
 
-export default Header;
+export default connect(
+    null,
+    dispatch => ({
+        closeDock: () => dispatch(toggleFrame()),
+    })
+)(Header);

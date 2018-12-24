@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { render } from 'react-dom';
 
-import Root from '../../app/containers/Root';
+import Root from '../app/containers/Root';
+import configureStore from '../app/store/configureStore';
 
-import actionTypes from '../../app/actions/gif-action-types';
+import actionTypes from '../app/actions/gif-action-types';
 
 class GifButton extends Component {
     static propTypes = {
@@ -32,8 +33,7 @@ const loadGifButtons = () => {
     let store;
 
     if (toolbars.length > 0 || reviewMenu !== null) {
-        const createStore = require('../../app/store/configureStore');
-        store = createStore();
+        store = configureStore();
         const frameDOM = document.createElement('div');
         document.body.appendChild(frameDOM);
         render(

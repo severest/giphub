@@ -11,21 +11,7 @@ import { toggleFrame, loadMore } from '../actions/gifs';
 
 import style from './App.css';
 
-@connect(
-    state => ({
-        isVisible: state.gifs.frameVisible,
-        gifs: state.gifs.gifs,
-        searchInProgress: state.gifs.searchInProgress,
-        searchError: state.gifs.searchError,
-        textarea: state.gifs.textarea,
-        onChooseGif: state.gifs.onChooseGif,
-    }),
-    dispatch => ({
-        closeDock: () => dispatch(toggleFrame()),
-        loadMore: () => dispatch(loadMore()),
-    })
-)
-export default class App extends Component {
+class App extends Component {
     static propTypes = {
         isVisible: PropTypes.bool.isRequired,
         gifs: PropTypes.array.isRequired,
@@ -107,3 +93,18 @@ export default class App extends Component {
         );
     }
 }
+
+export default connect(
+    state => ({
+        isVisible: state.gifs.frameVisible,
+        gifs: state.gifs.gifs,
+        searchInProgress: state.gifs.searchInProgress,
+        searchError: state.gifs.searchError,
+        textarea: state.gifs.textarea,
+        onChooseGif: state.gifs.onChooseGif,
+    }),
+    dispatch => ({
+        closeDock: () => dispatch(toggleFrame()),
+        loadMore: () => dispatch(loadMore()),
+    })
+)(App);

@@ -6,14 +6,6 @@ import { searchGifs } from '../actions/gifs';
 
 import style from './search.css';
 
-@connect(
-    state => ({
-        isVisible: state.gifs.frameVisible,
-    }),
-    dispatch => ({
-        searchGifs: searchTerm => dispatch(searchGifs(searchTerm)),
-    })
-)
 class Search extends React.Component {
     static propTypes = {
         isVisible: PropTypes.bool.isRequired,
@@ -63,4 +55,11 @@ class Search extends React.Component {
     }
 }
 
-export default Search;
+export default connect(
+    state => ({
+        isVisible: state.gifs.frameVisible,
+    }),
+    dispatch => ({
+        searchGifs: searchTerm => dispatch(searchGifs(searchTerm)),
+    })
+)(Search);
