@@ -2,7 +2,8 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "globals": {
-    "browser": true
+    "browser": true,
+    "GIPHY_API": true
   },
   "env": {
     "browser": true,

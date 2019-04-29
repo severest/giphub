@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const GIPHY_API = process.env.GIPHY_API || '';
 
 const DIST_DIR = path.resolve(__dirname, 'dist');
 const SRC_DIR = path.resolve(__dirname, 'src');
@@ -109,6 +110,9 @@ module.exports = {
         new ExtractTextPlugin(MANIFEST_FILE),
         new webpack.ProvidePlugin({
             browser: 'webextension-polyfill'
+        }),
+        new webpack.DefinePlugin({
+            GIPHY_API: JSON.stringify(GIPHY_API),
         }),
     ],
     devtool: IS_PRODUCTION ? '' : 'inline-source-map',

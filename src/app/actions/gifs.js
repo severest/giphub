@@ -3,7 +3,7 @@ import actionTypes from './gif-action-types';
 export const searchGifs = searchTerm => (dispatch, getState) => {
     dispatch({ type: actionTypes.SEARCH_GIF, payload: searchTerm });
     const limit = getState().gifs.searchLimit;
-    return fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURI(searchTerm)}&limit=${limit}&api_key=dc6zaTOxFJmzC`)
+    return fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURI(searchTerm)}&limit=${limit}&api_key=${GIPHY_API}`)
         .then((res) => {
             if (res.status !== 200) {
                 dispatch({ type: actionTypes.SEARCH_ERROR });
