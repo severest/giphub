@@ -15,9 +15,11 @@ class Header extends React.Component {
 
     render() {
         return (
-            <div className={style.header}>
-                <img className={style.icon} alt="Giphub" src={giphub} />
-                <img className={style.powered} alt="Powered by Giphy" src={giphy} />
+            <div className={style.headerContainer}>
+                <div className={style.header}>
+                    <img className={style.icon} alt="Giphub" src={giphub} />
+                    <img className={style.powered} alt="Powered by Giphy" src={giphy} />
+                </div>
                 <button onClick={() => this.props.closeDock()}>
                     Close
                 </button>
