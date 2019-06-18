@@ -1,31 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { render } from 'react-dom';
 
+import GifButton from './GifButton';
 import Root from '../app/containers/Root';
 import configureStore from '../app/store/configureStore';
 
 import actionTypes from '../app/actions/gif-action-types';
 
-class GifButton extends Component {
-    static propTypes = {
-        className: PropTypes.string.isRequired,
-        handleGifClick: PropTypes.func.isRequired,
-    }
-
-    render() {
-        return (
-            <button
-                type="button"
-                className={this.props.className}
-                onClick={this.props.handleGifClick}
-                style={{ marginRight: '5px' }}
-            >
-                GIF
-            </button>
-        );
-    }
-}
 
 const loadGifButtons = () => {
     const toolbars = document.querySelectorAll('.timeline-comment-wrapper .form-actions, .js-inline-comment-form .form-actions');

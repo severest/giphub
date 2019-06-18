@@ -1,7 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const GIPHY_API = process.env.GIPHY_API || '';
@@ -9,35 +10,23 @@ const GIPHY_API = process.env.GIPHY_API || '';
 const DIST_DIR = path.resolve(__dirname, 'dist');
 const SRC_DIR = path.resolve(__dirname, 'src');
 const ASSET_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2'];
-const MANIFEST_FILE = 'manifest.json';
 
-const manifestPath = path.join(SRC_DIR, MANIFEST_FILE);
 
 module.exports = {
-    output: {
-        filename: MANIFEST_FILE,
-        path: DIST_DIR,
+    entry: {
+        background: path.join(SRC_DIR, 'background', 'background.js'),
+        entry: path.join(SRC_DIR, 'inject', 'entry.js')
     },
-    entry: manifestPath,
+    output: {
+        path: DIST_DIR,
+        filename: '[name].bundle.js'
+    },
     module: {
         rules: [
             {
                 test: /\.html$/,
-                use: [
-                    'file-loader',
-                    'extract-loader',
-                    {
-                        loader: 'html-loader',
-                        options: {
-                            minimize: IS_PRODUCTION,
-                            attrs: [
-                                'link:href',
-                                'script:src',
-                                'img:src'
-                            ]
-                        }
-                    }
-                ]
+                loader: 'html-loader',
+                exclude: /node_modules/
             },
             {
                 test: /\.css$/,
@@ -47,22 +36,10 @@ module.exports = {
                         loader: 'css-loader',
                         options: {
                             modules: true,
-                            sourceMap: false,
-                            localIdentName: '[path][name]__[local]--[hash:base64:5]',
-                            minimize: IS_PRODUCTION
+                            sourceMap: false
                         }
                     }
                 ]
-            },
-            {
-                test: /\/entry\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: [{
-                    loader: 'spawn-loader',
-                    options: {
-                        name: '[hash].js'
-                    }
-                }]
             },
             {
                 test: /\.jsx?$/,
@@ -79,7 +56,7 @@ module.exports = {
                 use: {
                     loader: 'file-loader',
                     options: {
-                        outputPath: 'assets/'
+                        name: '[name].[ext]'
                     }
                 }
             },
@@ -90,14 +67,6 @@ module.exports = {
                     loader: 'url-loader',
                 }
             },
-            {
-                test: manifestPath,
-                use: ExtractTextPlugin.extract([
-                    'raw-loader',
-                    'extricate-loader',
-                    'interpolate-loader'
-                ])
-            },
             // Workaround for https://github.com/webpack/webpack/issues/5828
             {
                 test: require.resolve('webextension-polyfill'),
@@ -106,13 +75,27 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(DIST_DIR),
-        new ExtractTextPlugin(MANIFEST_FILE),
+        new CleanWebpackPlugin(),
         new webpack.ProvidePlugin({
             browser: 'webextension-polyfill'
         }),
         new webpack.DefinePlugin({
             GIPHY_API: JSON.stringify(GIPHY_API),
+        }),
+        new CopyWebpackPlugin([{
+            from: 'src/manifest.json',
+            transform: content => (
+                Buffer.from(JSON.stringify({
+                    description: process.env.npm_package_description,
+                    version: process.env.npm_package_version,
+                    ...JSON.parse(content.toString())
+                }))
+            )
+        }]),
+        new HtmlWebpackPlugin({
+            template: path.join(SRC_DIR, 'popup', 'index.html'),
+            filename: 'popup.html',
+            chunks: []
         }),
     ],
     devtool: IS_PRODUCTION ? '' : 'inline-source-map',
