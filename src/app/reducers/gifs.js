@@ -8,7 +8,7 @@ const initialState = {
     morePages: false,
     moreRequestInProgress: false,
     searchOffset: 0,
-    searchLimit: 15,
+    searchLimit: 8,
     frameVisible: false,
     textarea: null,
     onChooseGif: () => {},

@@ -8,12 +8,49 @@ import configureStore from '../app/store/configureStore';
 import actionTypes from '../app/actions/gif-action-types';
 
 
-const loadGifButtons = () => {
-    const toolbars = document.querySelectorAll('.timeline-comment-wrapper .form-actions, .js-inline-comment-form .form-actions');
-    const reviewMenu = document.querySelector('.pull-request-review-menu');
-    let store;
+let store;
 
-    if (toolbars.length > 0 || reviewMenu !== null) {
+const createGifButton = (element, textarea, prepend = false) => {
+    const previousBtns = element.getElementsByClassName('gif-toolbar');
+    for (let btn = 0; btn < previousBtns.length; btn += 1) {
+        previousBtns[btn].remove();
+    }
+
+    const injectDOM = document.createElement('span');
+    injectDOM.className = 'gif-toolbar';
+    if (prepend) {
+        element.prepend(injectDOM);
+    } else {
+        element.appendChild(injectDOM);
+    }
+    render(<GifButton
+        className="btn"
+        handleGifClick={() => {
+            const bar = element;
+            const area = textarea;
+            store.dispatch({
+                type: actionTypes.SET_TEXTAREA,
+                payload: {
+                    area,
+                    onChooseGif: () => {
+                        const btns = bar.getElementsByClassName('btn');
+                        for (let btn = 0; btn < btns.length; btn += 1) {
+                            btns[btn].removeAttribute('disabled', false);
+                        }
+                    },
+                },
+            });
+            store.dispatch({ type: actionTypes.TOGGLE_FRAME });
+        }}
+    />, injectDOM);
+};
+
+const loadGifButtons = () => {
+    const commentBoxes = document.querySelectorAll('.timeline-comment-wrapper .form-actions .flex-justify-end');
+    const inlineComments = document.querySelectorAll('.js-inline-comment-form .form-actions');
+    const reviewMenu = document.querySelector('.pull-request-review-menu');
+
+    if (commentBoxes.length > 0 || inlineComments.length > 0 || reviewMenu !== null) {
         store = configureStore();
         const frameDOM = document.createElement('div');
         document.body.appendChild(frameDOM);
@@ -23,35 +60,13 @@ const loadGifButtons = () => {
         );
     }
 
-    for (let i = 0; i < toolbars.length; i += 1) {
-        const previousBtns = toolbars[i].getElementsByClassName('gif-toolbar');
-        for (let btn = 0; btn < previousBtns.length; btn += 1) {
-            previousBtns[btn].remove();
-        }
+    for (let i = 0; i < commentBoxes.length; i += 1) {
+        createGifButton(commentBoxes[i], commentBoxes[i].parentNode.parentNode.parentNode.getElementsByClassName('comment-form-textarea')[0], true);
+    }
 
-        const injectDOM = document.createElement('span');
-        injectDOM.className = 'gif-toolbar';
-        toolbars[i].appendChild(injectDOM);
-        render(<GifButton
-            className="btn"
-            handleGifClick={() => {
-                const bar = toolbars[i];
-                const area = bar.parentNode.parentNode.getElementsByClassName('comment-form-textarea')[0];
-                store.dispatch({
-                    type: actionTypes.SET_TEXTAREA,
-                    payload: {
-                        area,
-                        onChooseGif: () => {
-                            const btns = bar.getElementsByClassName('btn');
-                            for (let btn = 0; btn < btns.length; btn += 1) {
-                                btns[btn].removeAttribute('disabled', false);
-                            }
-                        },
-                    },
-                });
-                store.dispatch({ type: actionTypes.TOGGLE_FRAME });
-            }}
-        />, injectDOM);
+
+    for (let i = 0; i < inlineComments.length; i += 1) {
+        createGifButton(inlineComments[i], inlineComments[i].parentNode.parentNode.getElementsByClassName('comment-form-textarea')[0], false);
     }
 
 
@@ -86,8 +101,10 @@ const loadGifButtons = () => {
 
 loadGifButtons();
 
-document.querySelectorAll('.js-add-line-comment').forEach((element) => {
-    element.addEventListener('click', () => {
-        setTimeout(loadGifButtons, 0);
+setTimeout(() => {
+    document.querySelectorAll('.js-add-line-comment').forEach((element) => {
+        element.addEventListener('click', () => {
+            setTimeout(loadGifButtons, 0);
+        });
     });
-});
+}, 1000);
