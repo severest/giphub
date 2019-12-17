@@ -6,6 +6,7 @@ import Root from '../app/containers/Root';
 import configureStore from '../app/store/configureStore';
 
 import actionTypes from '../app/actions/gif-action-types';
+import { toggleFrame } from '../app/actions/gifs';
 
 
 let store;
@@ -40,7 +41,7 @@ const createGifButton = (element, textarea, prepend = false) => {
                     },
                 },
             });
-            store.dispatch({ type: actionTypes.TOGGLE_FRAME });
+            store.dispatch(toggleFrame());
         }}
     />, injectDOM);
 };
@@ -93,7 +94,7 @@ const loadGifButtons = () => {
                         },
                     },
                 });
-                store.dispatch({ type: actionTypes.TOGGLE_FRAME });
+                store.dispatch(toggleFrame());
             }}
         />, injectDOM);
     }
@@ -108,3 +109,17 @@ setTimeout(() => {
         });
     });
 }, 1000);
+
+document.addEventListener('keyup', (event) => {
+    if (event.defaultPrevented || !store) {
+        return;
+    }
+    const { frameVisible } = store.getState().gifs;
+    if (!frameVisible) {
+        return;
+    }
+    const key = event.key || event.keyCode;
+    if (key === 'Escape' || key === 'Esc' || key === 27) {
+        store.dispatch(toggleFrame());
+    }
+});
