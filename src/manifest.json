@@ -4,6 +4,7 @@
   "author": "Everest, Sean <me@seaneverest.com>",
   "background": {
     "scripts": [
+      "browser-polyfill.js",
       "background.bundle.js"
     ]
   },

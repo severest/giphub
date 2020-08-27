@@ -67,31 +67,30 @@ module.exports = {
                     loader: 'url-loader',
                 }
             },
-            // Workaround for https://github.com/webpack/webpack/issues/5828
-            {
-                test: require.resolve('webextension-polyfill'),
-                use: 'imports-loader?browser=>undefined'
-            }
         ]
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new webpack.ProvidePlugin({
-            browser: 'webextension-polyfill'
-        }),
         new webpack.DefinePlugin({
             GIPHY_API: JSON.stringify(GIPHY_API),
         }),
-        new CopyWebpackPlugin([{
-            from: 'src/manifest.json',
-            transform: content => (
-                Buffer.from(JSON.stringify({
-                    description: process.env.npm_package_description,
-                    version: process.env.npm_package_version,
-                    ...JSON.parse(content.toString())
-                }))
-            )
-        }]),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'src/manifest.json',
+                    transform: (content) => (
+                        Buffer.from(JSON.stringify({
+                            description: process.env.npm_package_description,
+                            version: process.env.npm_package_version,
+                            ...JSON.parse(content.toString())
+                        }))
+                    )
+                },
+                {
+                    from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js'
+                }
+            ]
+        }),
         new HtmlWebpackPlugin({
             template: path.join(SRC_DIR, 'popup', 'index.html'),
             filename: 'popup.html',
