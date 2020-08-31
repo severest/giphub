@@ -19,7 +19,7 @@
     border-radius: 4px;
     font-family: "Open Sans", sans-serif;
     color: #ffffff;
-    font-size: 11px;
+    font-size: 12px;
     background: #5d016e;
     padding: 5px;
     text-decoration: none;
@@ -27,7 +27,7 @@
 }
 
 .headerContainer button:hover {
-    text-decoration: underline;
+    color: #aaa;
 }
 .headerContainer button:focus {
     outline: none;

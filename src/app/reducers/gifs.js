@@ -1,7 +1,7 @@
 import actionTypes from '../actions/gif-action-types';
 
 const initialState = {
-    gifs: [],
+    gifs: null,
     searchInProgress: false,
     searchError: false,
     lastSearchTerm: '',

@@ -14,7 +14,7 @@ import style from './App.css';
 class App extends Component {
     static propTypes = {
         isVisible: PropTypes.bool.isRequired,
-        gifs: PropTypes.array.isRequired,
+        gifs: PropTypes.array,
         searchInProgress: PropTypes.bool.isRequired,
         searchError: PropTypes.bool.isRequired,
         textarea: PropTypes.object,
@@ -23,8 +23,12 @@ class App extends Component {
         onChooseGif: PropTypes.func.isRequired,
     }
 
+    static defaultProps = {
+        gifs: null,
+    }
+
     getGifs() {
-        return this.props.gifs.map(g => (
+        return this.props.gifs && this.props.gifs.map(g => (
             <button
                 key={g.id}
                 onClick={() => this.insertTextAtCursor(g.images.downsized_medium.url)}
@@ -47,6 +51,13 @@ class App extends Component {
         }
         if (this.props.searchInProgress) {
             return <Loader />;
+        }
+        if (this.props.gifs !== null && this.props.gifs.length === 0) {
+            return (
+                <div className={style.error}>
+                    😢 No results
+                </div>
+            )
         }
         return (
             <div className={style.gifs} onScroll={this.handleInfiniteScroll}>
