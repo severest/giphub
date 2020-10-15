@@ -49,7 +49,7 @@ const createGifButton = (element, textarea, prepend = false) => {
 const loadGifButtons = () => {
     const commentBoxes = document.querySelectorAll('.timeline-comment-wrapper .form-actions .flex-justify-end');
     const inlineComments = document.querySelectorAll('.js-inline-comment-form .form-actions');
-    const reviewMenu = document.querySelector('.pull-request-review-menu');
+    const reviewMenu = document.querySelector('#review-changes-modal');
 
     if (commentBoxes.length > 0 || inlineComments.length > 0 || reviewMenu !== null) {
         store = configureStore();
