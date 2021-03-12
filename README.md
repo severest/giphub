@@ -1,4 +1,4 @@
-# Giphub [![build status](https://travis-ci.org/severest/giphub.svg?branch=master)](https://travis-ci.org/severest/giphub)
+# Giphub [![Build Status](https://sean.semaphoreci.com/badges/giphub/branches/master.svg?style=shields)](https://sean.semaphoreci.com/projects/giphub)
 Giphub let's you insert Giphy GIFs from within GitHub.
 
 - Firefox <https://addons.mozilla.org/en-US/firefox/addon/giphubv1/>
