@@ -1,0 +1,19 @@
+version: v1.0
+name: giphub
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: Build JS
+          commands:
+            - checkout
+            - sem-version node 12.18.3
+            - cache restore
+            - npm install -g yarn
+            - yarn install --pure-lockfile
+            - cache store
+            - yarn run build
