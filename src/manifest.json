@@ -1,12 +1,9 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Giphub",
   "author": "Everest, Sean <me@seaneverest.com>",
   "background": {
-    "scripts": [
-      "browser-polyfill.js",
-      "background.bundle.js"
-    ]
+    "service_worker": "background.js"
   },
   "icons": {
     "16": "16.png",
@@ -14,7 +11,7 @@
     "96": "96.png",
     "128": "128.png"
   },
-  "browser_action": {
+  "action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "16.png",
@@ -23,8 +20,11 @@
     },
     "default_title": "Giphub"
   },
-  "permissions": [
-    "tabs",
+  "permissions" : [
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
     "https://github.com/*",
     "https://api.giphy.com/*"
   ]

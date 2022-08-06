@@ -14,7 +14,6 @@ const ASSET_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf
 
 module.exports = {
     entry: {
-        background: path.join(SRC_DIR, 'background', 'background.js'),
         entry: path.join(SRC_DIR, 'inject', 'entry.js')
     },
     output: {
@@ -87,7 +86,11 @@ module.exports = {
                     )
                 },
                 {
-                    from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js'
+                    from: 'src/icon/*.png',
+                    to: '[name].[ext]'
+                },
+                {
+                    from: 'src/background.js'
                 }
             ]
         }),

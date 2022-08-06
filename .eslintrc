@@ -3,7 +3,8 @@
   "extends": "airbnb",
   "globals": {
     "browser": true,
-    "GIPHY_API": true
+    "GIPHY_API": true,
+    "chrome": true
   },
   "env": {
     "browser": true,

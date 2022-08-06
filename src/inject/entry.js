@@ -81,7 +81,7 @@ const loadGifButtons = () => {
         injectDOM.className = 'gif-toolbar';
         reviewMenu.getElementsByClassName('form-actions')[0].prepend(injectDOM);
         render(<GifButton
-            className="toolbar-item"
+            className="btn btn-sm float-left"
             handleGifClick={() => {
                 const area = reviewMenu.getElementsByClassName('comment-form-textarea')[0];
                 store.dispatch({
