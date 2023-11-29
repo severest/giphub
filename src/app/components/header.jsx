@@ -10,6 +10,7 @@ import giphub from '../images/giphub.png';
 
 class Header extends React.Component {
     static propTypes = {
+        onClose: PropTypes.func.isRequired,
         closeDock: PropTypes.func.isRequired,
     }
 
@@ -20,7 +21,11 @@ class Header extends React.Component {
                     <img className={style.icon} alt="Giphub" src={giphub} />
                     <img className={style.powered} alt="Powered by Giphy" src={giphy} />
                 </div>
-                <button onClick={() => this.props.closeDock()}>
+                <button onClick={() => {
+                    this.props.onClose();
+                    this.props.closeDock();
+                }}
+                >
                     Close
                 </button>
             </div>
@@ -29,8 +34,10 @@ class Header extends React.Component {
 }
 
 export default connect(
-    null,
-    dispatch => ({
+    (state) => ({
+        onClose: state.gifs.onClose,
+    }),
+    (dispatch) => ({
         closeDock: () => dispatch(toggleFrame()),
     })
 )(Header);

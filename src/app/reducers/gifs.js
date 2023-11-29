@@ -1,10 +1,10 @@
-import actionTypes from '../actions/gif-action-types';
+import actionTypes from "../actions/gif-action-types";
 
 const initialState = {
     gifs: null,
     searchInProgress: false,
     searchError: false,
-    lastSearchTerm: '',
+    lastSearchTerm: "",
     morePages: false,
     moreRequestInProgress: false,
     searchOffset: 0,
@@ -12,10 +12,11 @@ const initialState = {
     frameVisible: false,
     textarea: null,
     onChooseGif: () => {},
+    onClose: () => {},
 };
 
 const actionsMap = {
-    [actionTypes.TOGGLE_FRAME]: state => ({
+    [actionTypes.TOGGLE_FRAME]: (state) => ({
         ...state,
         frameVisible: !state.frameVisible,
     }),
@@ -26,7 +27,7 @@ const actionsMap = {
         lastSearchTerm: action.payload,
         searchOffset: 0,
     }),
-    [actionTypes.SEARCH_ERROR]: state => ({
+    [actionTypes.SEARCH_ERROR]: (state) => ({
         ...state,
         searchInProgress: false,
         searchError: true,
@@ -37,7 +38,7 @@ const actionsMap = {
         gifs: action.payload,
         searchOffset: state.searchLimit,
     }),
-    [actionTypes.FETCH_MORE_GIF]: state => ({
+    [actionTypes.FETCH_MORE_GIF]: (state) => ({
         ...state,
         searchOffset: state.searchOffset + state.searchLimit,
         moreRequestInProgress: true,
@@ -51,6 +52,7 @@ const actionsMap = {
         ...state,
         textarea: action.payload.area,
         onChooseGif: action.payload.onChooseGif,
+        onClose: action.payload.onClose,
     }),
     [actionTypes.HAS_MORE_PAGES]: (state, action) => ({
         ...state,

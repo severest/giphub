@@ -28,10 +28,14 @@ class App extends Component {
     }
 
     getGifs() {
-        return this.props.gifs && this.props.gifs.map(g => (
+        return this.props.gifs && this.props.gifs.map((g) => (
             <button
                 key={g.id}
-                onClick={() => this.insertTextAtCursor(g.images.downsized_medium.url)}
+                onClick={(evt) => {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    this.insertTextAtCursor(g.images.downsized_medium.url);
+                }}
             >
                 <img
                     alt="gif"
@@ -57,7 +61,7 @@ class App extends Component {
                 <div className={style.error}>
                     😢 No results
                 </div>
-            )
+            );
         }
         return (
             <div className={style.gifs} onScroll={this.handleInfiniteScroll}>
@@ -90,7 +94,7 @@ class App extends Component {
     render() {
         return (
             <Dock
-                position="right"
+                position="left"
                 defaultSize={0.4}
                 isVisible={this.props.isVisible}
             >
@@ -106,7 +110,7 @@ class App extends Component {
 }
 
 export default connect(
-    state => ({
+    (state) => ({
         isVisible: state.gifs.frameVisible,
         gifs: state.gifs.gifs,
         searchInProgress: state.gifs.searchInProgress,
@@ -114,7 +118,7 @@ export default connect(
         textarea: state.gifs.textarea,
         onChooseGif: state.gifs.onChooseGif,
     }),
-    dispatch => ({
+    (dispatch) => ({
         closeDock: () => dispatch(toggleFrame()),
         loadMore: () => dispatch(loadMore()),
     })

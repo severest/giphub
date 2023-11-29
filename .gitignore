@@ -61,3 +61,5 @@ typings/
 
 # Visual Studio Code
 .vs
+
+.DS_Store
