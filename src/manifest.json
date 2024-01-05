@@ -1,31 +1,30 @@
 {
-  "manifest_version": 3,
-  "name": "Giphub",
-  "author": "Everest, Sean <me@seaneverest.com>",
-  "background": {
-    "service_worker": "background.js"
-  },
-  "icons": {
-    "16": "16.png",
-    "48": "48.png",
-    "96": "96.png",
-    "128": "128.png"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "16.png",
-      "32": "32.png",
-      "64": "64.png"
+    "manifest_version": 3,
+    "name": "Giphub",
+    "author": "Everest, Sean <me@seaneverest.com>",
+    "background": {
+        "service_worker": "background.js"
     },
-    "default_title": "Giphub"
-  },
-  "permissions" : [
-    "scripting",
-    "tabs"
-  ],
-  "host_permissions": [
-    "https://github.com/*",
-    "https://api.giphy.com/*"
-  ]
+    "icons": {
+        "16": "16.png",
+        "48": "48.png",
+        "96": "96.png",
+        "128": "128.png"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "16.png",
+            "32": "32.png",
+            "64": "64.png"
+        },
+        "default_title": "Giphub"
+    },
+    "permissions": ["scripting", "tabs"],
+    "host_permissions": ["https://github.com/*", "https://api.giphy.com/*"],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{6692fb66-1202-4d28-bd3e-4ba5627025d2}"
+        }
+    }
 }
