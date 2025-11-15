@@ -1,0 +1,32 @@
+{
+	"$schema": "https://json.schemastore.org/chrome-manifest",
+	"name": "Giphub",
+	"version": "2.0.0",
+	"description": "Quickly add GIFs to your Github comments",
+	"homepage_url": "https://github.com/severest/giphub",
+	"manifest_version": 3,
+	"minimum_chrome_version": "121",
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{6692fb66-1202-4d28-bd3e-4ba5627025d2}",
+			"strict_min_version": "109.0"
+		}
+	},
+	"icons": {
+		"128": "icon.png"
+	},
+	"permissions": [],
+	"host_permissions": ["https://github.com/*"],
+	"content_scripts": [
+		{
+			"matches": ["https://github.com/*"],
+			"js": ["content.js"],
+			"run_at": "document_end"
+		}
+	],
+	"background": {
+		"service_worker": "background.js",
+		"type": "module",
+		"scripts": ["background.js"]
+	}
+}
