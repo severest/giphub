@@ -21,8 +21,9 @@ const convertToDataURL = async (url) => {
 const fetchGiphy = async (query) => {
 	const response = await fetch(giphyApiUrl(encodeURI(query), 20));
 	if (response.status !== 200) {
-		console.error(`Error fetching GIFs from Giphy API: ${response.statusText}`);
-		return;
+		throw new Error(
+			`Error fetching GIFs from Giphy API: ${response.statusText}`,
+		);
 	}
 	const giphyResponse = await response.json();
 
@@ -35,15 +36,13 @@ const fetchGiphy = async (query) => {
 };
 
 browserRuntime.onMessage.addListener((message, sender, sendResponse) => {
-	if (message?.gifSearchQuery) {
-		fetchGiphy(message.gifSearchQuery)
+	if (message?.type === "gifSearch") {
+		fetchGiphy(message.data)
 			.then((data) => {
-				console.log({ data });
-				// Make sure you're sending the actual data from fetchGiphy
-				return sendResponse(data);
+				return sendResponse({ type: "gifResults", data });
 			})
 			.catch((error) => {
-				return sendResponse(error.message);
+				return sendResponse({ type: "error", data: error.message });
 			});
 		return true;
 	}

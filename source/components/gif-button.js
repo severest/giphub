@@ -1,13 +1,16 @@
 import { useCallback, useState } from "react";
 import { MdGif } from "react-icons/md";
 import { browserRuntime } from "../browser-runtime";
-import giphyLogo from "../giphy.png";
+import giphyLogo from "url:../giphy.png";
 import GifThumbnail from "./gif-thumbnail";
+import Loader from "./loader";
 
 export const addGifInputId = "add-gif-input";
 export const addGifButtonId = "add-gif-button";
 
 const GifButton = ({ textarea }) => {
+	const [isLoading, setIsLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState(null);
 	const [isShowingGifs, setIsShowingGifs] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [gifs, setGifs] = useState([]);
@@ -16,11 +19,16 @@ const GifButton = ({ textarea }) => {
 	const searchGiphy = useCallback((query) => {
 		browserRuntime.sendMessage(
 			{
-				gifSearchQuery: query,
+				type: "gifSearch",
+				data: query,
 			},
 			(response) => {
-				console.log("Search message response:", response);
-				setGifs(response ?? []);
+				setIsLoading(false);
+				if (response.type === "gifResults") {
+					setGifs(response.data);
+				} else if (response.type === "error") {
+					setErrorMessage(response.data);
+				}
 			},
 		);
 	}, []);
@@ -30,6 +38,7 @@ const GifButton = ({ textarea }) => {
 			clearTimeout(debounceId);
 			setSearchTerm(evt.target.value);
 			if (evt.target.value.trim() !== "") {
+				setIsLoading(true);
 				const id = setTimeout(() => searchGiphy(evt.target.value), 500);
 				setDebounceId(id);
 			}
@@ -72,6 +81,7 @@ const GifButton = ({ textarea }) => {
 					height: "300px",
 					overflowY: "auto",
 					display: isShowingGifs ? "block" : "none",
+					marginBottom: "8px",
 				}}
 			>
 				<div
@@ -107,8 +117,35 @@ const GifButton = ({ textarea }) => {
 							outline: "none",
 						}}
 					/>
-					<img src={giphyLogo} style={{ height: "15px" }} />
+					<div
+						style={{
+							backgroundColor: "rgba(0,0,0,0.3)",
+							alignSelf: "stretch",
+							display: "flex",
+							alignItems: "center",
+						}}
+					>
+						<img
+							src={giphyLogo}
+							style={{
+								height: "15px",
+								filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))",
+							}}
+						/>
+					</div>
 				</div>
+				{isLoading && <Loader />}
+				{errorMessage && (
+					<div
+						style={{
+							backgroundColor: "var(--fgColor-danger)",
+							color: "white",
+							padding: "5px",
+						}}
+					>
+						Error: {errorMessage}
+					</div>
+				)}
 				<div
 					style={{
 						display: "grid",

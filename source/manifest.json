@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/chrome-manifest",
 	"name": "Giphub",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "Quickly add GIFs to your Github comments",
 	"homepage_url": "https://github.com/severest/giphub",
 	"manifest_version": 3,

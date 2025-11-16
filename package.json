@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"scripts": {
-		"build": "rm -rf ./distribution && NODE_NO_WARNINGS=1 parcel build",
+		"build": "rm -rf ./distribution && NODE_NO_WARNINGS=1 parcel build --detailed-report",
 		"lint": "run-p lint:*",
 		"lint-fix": "run-p 'lint:* -- --fix'",
 		"lint:css": "stylelint source/**/*.css",
@@ -36,10 +36,11 @@
 		"webext-options-sync": "^4.2.3"
 	},
 	"devDependencies": {
-		"@parcel/config-webextension": "^2.13.0",
-		"@parcel/resolver-default": "^2.13.0",
+		"@parcel/config-webextension": "^2.16.1",
+		"@parcel/resolver-default": "^2.16.1",
+		"@parcel/transformer-inline-string": "^2.16.1",
 		"npm-run-all2": "^7.0.1",
-		"parcel": "^2.13.0",
+		"parcel": "^2.16.1",
 		"process": "^0.11.10",
 		"stylelint": "^16.6.1",
 		"stylelint-config-prettier": "^9.0.5",
@@ -52,7 +53,8 @@
 	"targets": {
 		"default": {
 			"source": "source/manifest.json",
-			"distDir": "./distribution"
+			"distDir": "./distribution",
+			"sourceMap": false
 		}
 	},
 	"webExt": {

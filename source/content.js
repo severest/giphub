@@ -27,7 +27,7 @@ async function init() {
 
 		const notice = document.createElement("div");
 		notice.id = giphubAppId;
-		fieldset.append(notice);
+		fieldset.prepend(notice);
 		const root = createRoot(document.getElementById(giphubAppId));
 		root.render(<GifButton textarea={textarea} />);
 	};
