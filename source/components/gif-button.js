@@ -36,9 +36,12 @@ const GifButton = ({ textarea }) => {
 	const handleSearchChange = useCallback(
 		(evt) => {
 			clearTimeout(debounceId);
+			setIsLoading(false);
+			setErrorMessage(null);
 			setSearchTerm(evt.target.value);
 			if (evt.target.value.trim() !== "") {
 				setIsLoading(true);
+				setGifs([]);
 				const id = setTimeout(() => searchGiphy(evt.target.value), 500);
 				setDebounceId(id);
 			}
@@ -134,7 +137,17 @@ const GifButton = ({ textarea }) => {
 						/>
 					</div>
 				</div>
-				{isLoading && <Loader />}
+				{isLoading && (
+					<div
+						style={{
+							marginTop: "8px",
+							display: "flex",
+							justifyContent: "center",
+						}}
+					>
+						<Loader />
+					</div>
+				)}
 				{errorMessage && (
 					<div
 						style={{

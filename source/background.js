@@ -19,7 +19,7 @@ const convertToDataURL = async (url) => {
 };
 
 const fetchGiphy = async (query) => {
-	const response = await fetch(giphyApiUrl(encodeURI(query), 20));
+	const response = await fetch(giphyApiUrl(encodeURI(query), 21));
 	if (response.status !== 200) {
 		throw new Error(
 			`Error fetching GIFs from Giphy API: ${response.statusText}`,
