@@ -4,7 +4,6 @@
 		"build": "rm -rf ./distribution && NODE_NO_WARNINGS=1 parcel build --detailed-report",
 		"lint": "run-p lint:*",
 		"lint-fix": "run-p 'lint:* -- --fix'",
-		"lint:css": "stylelint source/**/*.css",
 		"lint:js": "xo",
 		"test": "run-p lint:* build",
 		"watch": "NODE_NO_WARNINGS=1 parcel watch --no-hmr"
@@ -14,12 +13,27 @@
 		"last 1 Firefox version"
 	],
 	"xo": {
+		"space": true,
 		"envs": [
 			"browser",
 			"webextensions"
 		],
 		"rules": {
-			"unicorn/prefer-top-level-await": "off"
+			"unicorn/prefer-top-level-await": "off",
+			"react/react-in-jsx-scope": "off",
+			"react/prop-types": "off"
+		},
+		"plugins": [
+			"react"
+		],
+		"extends": [
+			"plugin:react/recommended",
+			"plugin:react-hooks/recommended"
+		],
+		"settings": {
+			"react": {
+				"version": "detect"
+			}
 		}
 	},
 	"stylelint": {
@@ -39,6 +53,8 @@
 		"@parcel/config-webextension": "^2.16.1",
 		"@parcel/resolver-default": "^2.16.1",
 		"@parcel/transformer-inline-string": "^2.16.1",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^7.0.1",
 		"npm-run-all2": "^7.0.1",
 		"parcel": "^2.16.1",
 		"process": "^0.11.10",
