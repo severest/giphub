@@ -7,7 +7,7 @@ Giphub let's you insert Giphy GIFs from within GitHub.
 
 ## Setup
 
-This extension requires the installation of Node v18
+This extension requires the installation of Node v24.11.1
 
 Install required packages
 
