@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {MdGif} from 'react-icons/md';
 import giphyLogo from 'url:../giphy.png';
 import {browserRuntime} from '../browser-runtime.js';
@@ -9,23 +9,45 @@ export const addGifInputId = 'add-gif-input';
 export const addGifButtonId = 'add-gif-button';
 
 const GifButton = ({textarea}) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isShowingGifs, setIsShowingGifs] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [gifs, setGifs] = useState([]);
-  const [debounceId, setDebounceId] = useState(null);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const debounceId = useRef(null);
+  const scrollContainerReference = useRef(null);
+  const isLoadingReference = useRef(false);
+  const [isShowingLoadingIndicator, setIsShowingLoadingIndicator] = useState(false);
+  const isLoadingMoreReference = useRef(false);
 
-  const searchGiphy = useCallback(query => {
+  const searchGiphy = useCallback((query, currentOffset = 0, append = false) => {
+    if (append) {
+      isLoadingMoreReference.current = true;
+    } else {
+      isLoadingReference.current = true;
+    }
+
+    debounceId.current = null;
+    setIsShowingLoadingIndicator(true);
+
     browserRuntime.sendMessage(
       {
         type: 'gifSearch',
-        data: query,
+        data: {query, offset: currentOffset},
       },
       response => {
-        setIsLoading(false);
+        isLoadingReference.current = false;
+        isLoadingMoreReference.current = false;
+
         if (response.type === 'gifResults') {
-          setGifs(response.data);
+          setGifs(previousGifs => {
+            const newGifs = append ? [...previousGifs, ...response.data] : response.data;
+            return newGifs;
+          });
+          setHasMore(response.hasMore);
+          const newOffset = currentOffset + response.data.length;
+          setOffset(newOffset);
         } else if (response.type === 'error') {
           setErrorMessage(response.data);
         }
@@ -35,18 +57,22 @@ const GifButton = ({textarea}) => {
 
   const handleSearchChange = useCallback(
     event_ => {
-      clearTimeout(debounceId);
-      setIsLoading(false);
+      if (debounceId.current) {
+        clearTimeout(debounceId.current);
+      }
+
+      isLoadingReference.current = false;
+      isLoadingMoreReference.current = false;
       setErrorMessage(null);
       setSearchTerm(event_.target.value);
       if (event_.target.value.trim() !== '') {
-        setIsLoading(true);
         setGifs([]);
-        const id = setTimeout(() => searchGiphy(event_.target.value), 500);
-        setDebounceId(id);
+        setOffset(0);
+        setHasMore(true);
+        debounceId.current = setTimeout(() => searchGiphy(event_.target.value, 0, false), 750);
       }
     },
-    [debounceId, searchGiphy],
+    [searchGiphy],
   );
 
   const appendGifMarkdown = useCallback(
@@ -60,10 +86,23 @@ const GifButton = ({textarea}) => {
     [textarea],
   );
 
+  const handleScroll = useCallback(() => {
+    if (!scrollContainerReference.current || isLoadingMoreReference.current || !hasMore || scrollContainerReference.current.clientHeight >= scrollContainerReference.current.scrollHeight) {
+      return;
+    }
+
+    const {scrollTop, scrollHeight, clientHeight} = scrollContainerReference.current;
+
+    if (scrollTop + clientHeight >= scrollHeight - 50) {
+      searchGiphy(searchTerm, offset, true);
+    }
+  }, [hasMore, searchTerm, offset, searchGiphy]);
+
   return (
     <>
       <a
         id={addGifButtonId}
+        style={{marginBottom: '8px'}}
         className='Button--invisible Button--small Button'
         onClick={() => setIsShowingGifs(!isShowingGifs)}
       >
@@ -80,6 +119,7 @@ const GifButton = ({textarea}) => {
         </span>
       </a>
       <div
+        ref={scrollContainerReference}
         className='border rounded'
         style={{
           height: '300px',
@@ -87,6 +127,7 @@ const GifButton = ({textarea}) => {
           display: isShowingGifs ? 'block' : 'none',
           marginBottom: '8px',
         }}
+        onScroll={handleScroll}
       >
         <div
           style={{
@@ -138,17 +179,6 @@ const GifButton = ({textarea}) => {
             />
           </div>
         </div>
-        {isLoading && (
-          <div
-            style={{
-              marginTop: '8px',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Loader />
-          </div>
-        )}
         {errorMessage && (
           <div
             style={{
@@ -176,6 +206,29 @@ const GifButton = ({textarea}) => {
             />
           ))}
         </div>
+        {isShowingLoadingIndicator && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              padding: '16px',
+            }}
+          >
+            <Loader />
+          </div>
+        )}
+        {!hasMore && gifs.length > 0 && !isShowingLoadingIndicator && (
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '16px',
+              color: 'var(--fgColor-muted)',
+              fontSize: '14px',
+            }}
+          >
+            All done
+          </div>
+        )}
       </div>
     </>
   );

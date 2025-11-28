@@ -19,8 +19,8 @@ const convertToDataURL = async url => {
   });
 };
 
-const fetchGiphy = async query => {
-  const response = await fetch(giphyApiUrl(encodeURI(query), 21));
+const fetchGiphy = async (query, offset = 0) => {
+  const response = await fetch(giphyApiUrl(encodeURI(query), 21, offset));
   if (response.status !== 200) {
     throw new Error(
       `Error fetching GIFs from Giphy API: ${response.statusText}`,
@@ -29,18 +29,25 @@ const fetchGiphy = async query => {
 
   const giphyResponse = await response.json();
 
-  return Promise.all(
+  const data = await Promise.all(
     giphyResponse.data.map(async item => ({
       ...item,
       blobUrl: await convertToDataURL(item.images.downsized.url),
     })),
   );
+
+  const hasMore = giphyResponse.pagination.offset + giphyResponse.pagination.count < giphyResponse.pagination.total_count;
+
+  return {
+    data,
+    hasMore,
+  };
 };
 
 browserRuntime.onMessage.addListener((message, sender, sendResponse) => {
   if (message?.type === 'gifSearch') {
-    fetchGiphy(message.data)
-      .then(data => sendResponse({type: 'gifResults', data}))
+    fetchGiphy(message.data.query, message.data.offset)
+      .then(result => sendResponse({type: 'gifResults', data: result.data, hasMore: result.hasMore}))
       .catch(error => sendResponse({type: 'error', data: error.message}));
     return true;
   }
